@@ -38,6 +38,10 @@ Route::middleware(['auth','admin'])
 
 });
 
+Route::get('/', function () {
+    return view('dashboard.index');
+})->middleware('auth');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard.index');
