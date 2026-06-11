@@ -8,5 +8,18 @@ class ShopDrawing extends Model
 {
     protected $table = 'shop_drawing';
 
-    protected $guarded = [];
+    protected $fillable = [
+        'tgl_mcu',
+        'lokasi',
+        'pemohon',
+        'area_pelayanan',
+        'rekanan',
+        'pengawas',
+        'dokumentasi',
+        'status_digitasi',
+        'tanggal_digitasi',
+        'keterangan'
+    ];
+
+    public $timestamps = false;
 }
