@@ -74,6 +74,23 @@
             font-size: 15px;
         }
 
+        .sidebar-logout{
+    width:100%;
+    margin:5px 0;
+    padding:10px 16px;
+    border:none;
+    border-radius:10px;
+    background:transparent;
+    color:white;
+    text-align:left;
+    font-size:15px;
+    transition:.3s;
+}
+
+.sidebar-logout:hover{
+    background:rgba(255,255,255,.15);
+    color:white;
+}
         .sidebar-menu a:hover {
             background: rgba(255, 255, 255, .15);
             color: white;
@@ -163,14 +180,9 @@
                 Data Kontrak
             </a>
 
-            <a href="#">
+            <a href="/serah-terima" class="{{ request()->is('serah-terima*') ? 'active' : '' }}">
                 <i class="bi bi-clipboard-check-fill me-2"></i>
                 Serah Terima
-            </a>
-
-            <a href="#">
-                <i class="bi bi-journal-check me-2"></i>
-                Serah Terima Asbuilt
             </a>
 
             <a href="#">
@@ -178,16 +190,19 @@
                 Peminjaman
             </a>
 
-            <a href="#">
+            <a href="/users" class="{{ request()->is('users*') ? 'active' : '' }}">
                 <i class="bi bi-people-fill me-2"></i>
                 User
             </a>
 
-            <a href="#">
-                <i class="bi bi-box-arrow-right me-2"></i>
-                Logout
-            </a>
+            <form action="/logout" method="POST" class="mx-3 mt-2">
+    @csrf
 
+    <button type="submit" class="sidebar-logout">
+        <i class="bi bi-box-arrow-right me-2"></i>
+        Logout
+    </button>
+</form>
         </div>
 
         <div class="sidebar-footer">

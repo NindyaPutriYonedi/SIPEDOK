@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SerahTerimaController;
 use App\Http\Controllers\ShopDrawingController;
 use App\Http\Controllers\UserController;
-//use App\Models\ShopDrawingC;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -45,3 +45,63 @@ Route::middleware('auth')->group(function () {
     Route::delete('/mc0/{id}', [ShopDrawingController::class, 'destroy']);
 
 });
+
+Route::middleware('auth','admin')
+->group(function(){
+
+Route::get(
+'/serah-terima',
+[SerahTerimaController::class,'index']
+);
+
+Route::get(
+'/serah-terima/create',
+[SerahTerimaController::class,'create']
+)->middleware('admin');
+
+Route::post(
+'/serah-terima',
+[SerahTerimaController::class,'store']
+)->middleware('admin');
+
+Route::get(
+'/serah-terima/{id}',
+[SerahTerimaController::class,'show']
+);
+
+Route::delete(
+'/serah-terima/{id}',
+[SerahTerimaController::class,'destroy']
+)->middleware('admin');
+
+Route::get(
+'/serah-terima/download/{id}',
+[SerahTerimaController::class,'download']
+)->middleware('download');
+
+});
+
+Route::get(
+    '/serah-terima/{id}/print',
+    [SerahTerimaController::class,'print']
+)->middleware('admin');
+
+Route::get(
+'/serah-terima/{id}/edit',
+[SerahTerimaController::class,'edit']
+)->middleware('admin');
+
+Route::put(
+'/serah-terima/{id}',
+[SerahTerimaController::class,'update']
+)->middleware('admin');
+
+Route::get(
+    '/serah-terima/{id}/pdf',
+    [SerahTerimaController::class,'pdf']
+);
+
+Route::get(
+    '/serah-terima/{id}/download-pdf',
+    [SerahTerimaController::class,'downloadPdf']
+);
