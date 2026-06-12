@@ -175,7 +175,7 @@
                 MC0
             </a>
 
-            <a href="#">
+            <a href="/contracts" class="{{ request()->is('contracts*') ? 'active' : '' }}">
                 <i class="bi bi-file-earmark-text-fill me-2"></i>
                 Data Kontrak
             </a>

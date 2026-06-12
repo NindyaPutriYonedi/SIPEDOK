@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContractController;
 use App\Http\Controllers\SerahTerimaController;
 use App\Http\Controllers\ShopDrawingController;
 use App\Http\Controllers\UserController;
@@ -105,3 +106,65 @@ Route::get(
     '/serah-terima/{id}/download-pdf',
     [SerahTerimaController::class,'downloadPdf']
 );
+
+Route::middleware('auth')->group(function(){
+
+Route::get('/contracts/export', [ContractController::class, 'export'])
+    ->name('contracts.export');
+
+    Route::get(
+        '/contracts',
+        [ContractController::class,'index']
+    );
+
+    Route::get(
+        '/contracts/create',
+        [ContractController::class,'create']
+    )->middleware('admin');
+
+    Route::resource('contracts', ContractController::class);
+    Route::post(
+        '/contracts',
+        [ContractController::class,'store']
+    )->middleware('admin');
+
+    Route::get(
+        '/contracts/{id}/edit',
+        [ContractController::class,'edit']
+    )->middleware('admin');
+
+    Route::put(
+        '/contracts/{id}',
+        [ContractController::class,'update']
+    )->middleware('admin');
+
+    Route::delete(
+        '/contracts/{id}',
+        [ContractController::class,'destroy']
+    )->middleware('admin');
+
+    Route::get(
+        '/contracts/download/{id}',
+        [ContractController::class,'download']
+    )->middleware('download');
+
+});
+
+Route::middleware('auth')->group(function(){
+
+    // Route::get(
+    //     '/contracts/export',
+    //     [ContractController::class, 'export']
+    // )->name('contracts.export');
+
+    Route::get(
+        '/contracts/download/{id}',
+        [ContractController::class, 'download']
+    )->name('contracts.download');
+
+    Route::resource(
+        'contracts',
+        ContractController::class
+    );
+
+});
