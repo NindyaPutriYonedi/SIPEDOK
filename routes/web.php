@@ -7,9 +7,14 @@ use App\Http\Controllers\ShopDrawingController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PeminjamanDetailController;
 use App\Http\Controllers\UserController;
-
 use App\Http\Controllers\Mc1Controller;
+
 use App\Models\ShopDrawing;
+use App\Models\Mc1;
+use App\Models\Peminjaman;
+use App\Models\Contract;
+use App\Models\SerahTerima;
+use App\Models\User;
 
 use Illuminate\Support\Facades\Route;
 
@@ -33,9 +38,24 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard.index');
-})->middleware('auth');
 
+    $totalMc0 = ShopDrawing::count();
+    $totalMc1 = Mc1::count();
+    $totalKontrak = Contract::count();
+    $totalSerahTerima = SerahTerima::count();
+    $totalPeminjaman = Peminjaman::count();
+    $totalUser = User::count();
+
+    return view('dashboard.index', compact(
+        'totalMc0',
+        'totalMc1',
+        'totalKontrak',
+        'totalSerahTerima',
+        'totalPeminjaman',
+        'totalUser'
+    ));
+
+})->middleware('auth');
 
 // Route::get('/test-db', function () {
 //     return ShopDrawingController::all();

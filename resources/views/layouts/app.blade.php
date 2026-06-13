@@ -74,23 +74,24 @@
             font-size: 15px;
         }
 
-        .sidebar-logout{
-    width:100%;
-    margin:5px 0;
-    padding:10px 16px;
-    border:none;
-    border-radius:10px;
-    background:transparent;
-    color:white;
-    text-align:left;
-    font-size:15px;
-    transition:.3s;
-}
+        .sidebar-logout {
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: white;
+            text-align: left;
+            font-size: 15px;
+            transition: .3s;
+        }
 
-.sidebar-logout:hover{
-    background:rgba(255,255,255,.15);
-    color:white;
-}
+        .sidebar-logout:hover {
+            background: rgba(255, 255, 255, .15);
+            color: white;
+        }
+
         .sidebar-menu a:hover {
             background: rgba(255, 255, 255, .15);
             color: white;
@@ -185,33 +186,27 @@
                 Serah Terima
             </a>
 
-<<<<<<< HEAD
             <a href="/mc1" class="{{ request()->is('mc1*') ? 'active' : '' }}">
                 <i class="bi bi-journal-check me-2"></i>
                 MC1
             </a>
-
             <a href="/peminjaman" class="{{ request()->is('peminjaman*') ? 'active' : '' }}">
-=======
-            <a href="#">
->>>>>>> b358532b7997fd9847844e79e43e0314d77b9524
                 <i class="bi bi-box-seam-fill me-2"></i>
                 Peminjaman
             </a>
-
             <a href="/users" class="{{ request()->is('users*') ? 'active' : '' }}">
                 <i class="bi bi-people-fill me-2"></i>
                 User
             </a>
 
             <form action="/logout" method="POST" class="mx-3 mt-2">
-    @csrf
+                @csrf
 
-    <button type="submit" class="sidebar-logout">
-        <i class="bi bi-box-arrow-right me-2"></i>
-        Logout
-    </button>
-</form>
+                <button type="submit" class="sidebar-logout">
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Logout
+                </button>
+            </form>
         </div>
 
         <div class="sidebar-footer">
