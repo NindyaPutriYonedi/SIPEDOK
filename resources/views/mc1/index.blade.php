@@ -1,78 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="d-flex justify-content-between align-items-center mb-4">
 
     <div>
-        <h2 class="fw-bold mb-0">Data MC0</h2>
+        <h2 class="fw-bold mb-0">Data MC1</h2>
         <small class="text-muted">
         </small>
     </div>
 
-    <a href="/mc0/create" class="btn btn-primary">
+    <a href="/mc1/create" class="btn btn-primary">
         + Tambah Data
     </a>
 
 </div>
-
-<form action="/mc0" method="GET" class="row mb-3">
-
-    <div class="col-md-3">
-        <input type="text"
-               name="lokasi"
-               class="form-control"
-               placeholder="Cari Lokasi"
-               value="{{ request('lokasi') }}">
-    </div>
-
-    <div class="col-md-3">
-        <input type="text"
-               name="pemohon"
-               class="form-control"
-               placeholder="Cari Pemohon"
-               value="{{ request('pemohon') }}">
-    </div>
-
-    <div class="col-md-2">
-        <select name="bulan" class="form-control">
-
-            <option value="">
-                Semua Bulan
-            </option>
-
-            @for($i = 1; $i <= 12; $i++)
-                <option value="{{ $i }}"
-                    {{ request('bulan') == $i ? 'selected' : '' }}>
-                    {{ $i }}
-                </option>
-            @endfor
-
-        </select>
-    </div>
-
-    <div class="col-md-2">
-        <input type="number"
-               name="tahun"
-               class="form-control"
-               placeholder="Tahun"
-               value="{{ request('tahun') }}">
-    </div>
-
-    <div class="col-md-2 d-flex gap-2">
-
-        <button type="submit"
-                class="btn btn-primary">
-            Cari
-        </button>
-
-        <a href="/mc0"
-           class="btn btn-secondary">
-            Reset
-        </a>
-
-    </div>
-
-</form>
 
 <div class="card border-0 shadow-sm rounded-4">
 
@@ -86,11 +28,12 @@
 
                     <tr>
                         <th>No</th>
-                        <th>Tanggal MC0</th>
+                        <th>Tanggal MC1</th>
                         <th>Lokasi</th>
                         <th>Pemohon</th>
                         <th>Area Pelayanan</th>
-                        <th>Status Digitasi</th>
+                        <th>No Addendum</th>
+                        <th>Dokumentasi</th>
                         <th width="280">Aksi</th>
                     </tr>
 
@@ -104,7 +47,7 @@
 
                         <td>{{ $loop->iteration }}</td>
 
-                        <td>{{ $item->tgl_mcu }}</td>
+                        <td>{{ $item->tgl_mc1 }}</td>
 
                         <td>{{ $item->lokasi }}</td>
 
@@ -112,18 +55,20 @@
 
                         <td>{{ $item->area_pelayanan }}</td>
 
+                        <td>{{ $item->nomor_addendum }}</td>
+
                         <td>
 
-                            @if($item->status_digitasi == 'Sudah Digitasi')
+                            @if($item->dokumentasi)
 
-                                <span class="badge bg-success">
-                                    {{ $item->status_digitasi }}
-                                </span>
+                                <img src="{{ asset('dokumentasi/'.$item->dokumentasi) }}"
+                                     width="80"
+                                     class="img-thumbnail">
 
                             @else
 
-                                <span class="badge bg-warning text-dark">
-                                    {{ $item->status_digitasi }}
+                                <span class="text-muted">
+                                    Tidak Ada
                                 </span>
 
                             @endif
@@ -132,17 +77,17 @@
 
                         <td>
 
-                            <a href="/mc0/{{ $item->id }}"
+                            <a href="/mc1/{{ $item->id }}"
                                class="btn btn-info btn-sm">
                                 Detail
                             </a>
 
-                            <a href="/mc0/{{ $item->id }}/edit"
+                            <a href="/mc1/{{ $item->id }}/edit"
                                class="btn btn-warning btn-sm">
                                 Edit
                             </a>
 
-                            <form action="/mc0/{{ $item->id }}"
+                            <form action="/mc1/{{ $item->id }}"
                                   method="POST"
                                   class="d-inline">
 
@@ -167,10 +112,10 @@
 
                     <tr>
 
-                        <td colspan="7"
+                        <td colspan="8"
                             class="text-center py-4">
 
-                            Belum ada data MC0
+                            Belum ada data MC1
 
                         </td>
 

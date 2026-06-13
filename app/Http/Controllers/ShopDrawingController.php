@@ -7,9 +7,41 @@ use Illuminate\Http\Request;
 
 class ShopDrawingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = ShopDrawing::all();
+        $query = ShopDrawing::query();
+
+        if ($request->filled('lokasi')) {
+            $query->where(
+                'lokasi',
+                'like',
+                '%' . $request->lokasi . '%'
+            );
+        }
+
+        if ($request->filled('pemohon')) {
+            $query->where(
+                'pemohon',
+                'like',
+                '%' . $request->pemohon . '%'
+            );
+        }
+
+        if ($request->filled('bulan')) {
+            $query->whereMonth(
+                'tgl_mcu',
+                $request->bulan
+            );
+        }
+
+        if ($request->filled('tahun')) {
+            $query->whereYear(
+                'tgl_mcu',
+                $request->tahun
+            );
+        }
+
+        $data = $query->get();
 
         return view('mc0.index', compact('data'));
     }
@@ -27,9 +59,12 @@ class ShopDrawingController extends Controller
 
             $file = $request->file('dokumentasi');
 
-            $namaFile = time().'_'.$file->getClientOriginalName();
+            $namaFile = time() . '_' . $file->getClientOriginalName();
 
-            $file->move(public_path('dokumentasi'), $namaFile);
+            $file->move(
+                public_path('dokumentasi'),
+                $namaFile
+            );
         }
 
         ShopDrawing::create([
@@ -46,21 +81,30 @@ class ShopDrawingController extends Controller
         ]);
 
         return redirect('/mc0')
-            ->with('success', 'Data MC0 berhasil ditambahkan');
+            ->with(
+                'success',
+                'Data MC0 berhasil ditambahkan'
+            );
     }
 
     public function show($id)
     {
         $data = ShopDrawing::findOrFail($id);
 
-        return view('mc0.show', compact('data'));
+        return view(
+            'mc0.show',
+            compact('data')
+        );
     }
 
     public function edit($id)
     {
         $data = ShopDrawing::findOrFail($id);
 
-        return view('mc0.edit', compact('data'));
+        return view(
+            'mc0.edit',
+            compact('data')
+        );
     }
 
     public function update(Request $request, $id)
@@ -73,9 +117,13 @@ class ShopDrawingController extends Controller
 
             $file = $request->file('dokumentasi');
 
-            $namaFile = time().'_'.$file->getClientOriginalName();
+            $namaFile = time() . '_' .
+                $file->getClientOriginalName();
 
-            $file->move(public_path('dokumentasi'), $namaFile);
+            $file->move(
+                public_path('dokumentasi'),
+                $namaFile
+            );
         }
 
         $data->update([
@@ -92,7 +140,10 @@ class ShopDrawingController extends Controller
         ]);
 
         return redirect('/mc0')
-            ->with('success', 'Data berhasil diupdate');
+            ->with(
+                'success',
+                'Data berhasil diupdate'
+            );
     }
 
     public function destroy($id)
@@ -102,6 +153,9 @@ class ShopDrawingController extends Controller
         $data->delete();
 
         return redirect('/mc0')
-            ->with('success', 'Data berhasil dihapus');
+            ->with(
+                'success',
+                'Data berhasil dihapus'
+            );
     }
 }

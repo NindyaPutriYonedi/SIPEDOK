@@ -168,12 +168,12 @@
                 Serah Terima
             </a>
 
-            <a href="#">
+            <a href="/mc1" class="{{ request()->is('mc1*') ? 'active' : '' }}">
                 <i class="bi bi-journal-check me-2"></i>
-                Serah Terima Asbuilt
+                MC1
             </a>
 
-            <a href="#">
+            <a href="/peminjaman" class="{{ request()->is('peminjaman*') ? 'active' : '' }}">
                 <i class="bi bi-box-seam-fill me-2"></i>
                 Peminjaman
             </a>
