@@ -124,125 +124,122 @@ Route::get(
     [PeminjamanController::class, 'print']
 );
 
-Route::middleware(['auth', 'admin'])
-->group(function () {
+// Route::middleware(['auth', 'admin'])
+// ->group(function () {
+
+// Route::get(
+// '/serah-terima',
+// [SerahTerimaController::class,'index']
+// );
+
+// Route::get(
+// '/serah-terima/create',
+// [SerahTerimaController::class,'create']
+// )->middleware('admin');
+
+// Route::post(
+// '/serah-terima',
+// [SerahTerimaController::class,'store']
+// )->middleware('admin');
+
+// Route::get(
+// '/serah-terima/{id}',
+// [SerahTerimaController::class,'show']
+// );
+
+// Route::delete(
+// '/serah-terima/{id}',
+// [SerahTerimaController::class,'destroy']
+// )->middleware('admin');
+
+// Route::get(
+// '/serah-terima/download/{id}',
+// [SerahTerimaController::class,'download']
+// )->middleware('download');
+
+// });
+
+// Route::get(
+//     '/serah-terima/{id}/print',
+//     [SerahTerimaController::class,'print']
+// )->middleware('admin');
+
+// Route::get(
+// '/serah-terima/{id}/edit',
+// [SerahTerimaController::class,'edit']
+// )->middleware('admin');
+
+// Route::put(
+// '/serah-terima/{id}',
+// [SerahTerimaController::class,'update']
+// )->middleware('admin');
+
+// Route::get(
+//     '/serah-terima/{id}/pdf',
+//     [SerahTerimaController::class,'pdf']
+// );
+
+// Route::get(
+//     '/serah-terima/{id}/download-pdf',
+//     [SerahTerimaController::class,'downloadPdf']
+// );
+
+
+Route::resource(
+    'serah-terima',
+    SerahTerimaController::class
+)->except(['show']);
 
 Route::get(
-'/serah-terima',
-[SerahTerimaController::class,'index']
+    'serah-terima/{id}/print',
+    [SerahTerimaController::class, 'print']
+)->name('serah-terima.print');
+
+Route::get(
+    'contract/{nomor}',
+    [SerahTerimaController::class, 'getContract']
+)->name('contract.get');
+
+Route::resource(
+    'serah-terima',
+    SerahTerimaController::class
 );
 
 Route::get(
-'/serah-terima/create',
-[SerahTerimaController::class,'create']
-)->middleware('admin');
-
-Route::post(
-'/serah-terima',
-[SerahTerimaController::class,'store']
-)->middleware('admin');
-
-Route::get(
-'/serah-terima/{id}',
-[SerahTerimaController::class,'show']
-);
-
-Route::delete(
-'/serah-terima/{id}',
-[SerahTerimaController::class,'destroy']
-)->middleware('admin');
-
-Route::get(
-'/serah-terima/download/{id}',
-[SerahTerimaController::class,'download']
-)->middleware('download');
-
-});
-
-Route::get(
-    '/serah-terima/{id}/print',
-    [SerahTerimaController::class,'print']
-)->middleware('admin');
-
-Route::get(
-'/serah-terima/{id}/edit',
-[SerahTerimaController::class,'edit']
-)->middleware('admin');
-
-Route::put(
-'/serah-terima/{id}',
-[SerahTerimaController::class,'update']
-)->middleware('admin');
+    '/serah-terima/get-contract/{nomor}',
+    [SerahTerimaController::class,'getContract']
+)->name('serah-terima.get-contract');
 
 Route::get(
     '/serah-terima/{id}/pdf',
-    [SerahTerimaController::class,'pdf']
-);
+    [SerahTerimaController::class, 'pdf']
+)->name('serah-terima.pdf');
 
-Route::get(
-    '/serah-terima/{id}/download-pdf',
-    [SerahTerimaController::class,'downloadPdf']
-);
+Route::middleware(['auth'])->group(function () {
 
-Route::middleware('auth')->group(function(){
+    Route::get('/contracts', [ContractController::class, 'index'])
+        ->name('contracts.index');
 
-Route::get('/contracts/export', [ContractController::class, 'export'])
+    Route::get('/contracts/export', [ContractController::class, 'export'])
     ->name('contracts.export');
 
-    Route::get(
-        '/contracts',
-        [ContractController::class,'index']
-    );
+    Route::get('/contracts/create', [ContractController::class, 'create'])
+    ->name('contracts.create');
 
-    Route::get(
-        '/contracts/create',
-        [ContractController::class,'create']
-    )->middleware('admin');
+    Route::post('/contracts', [ContractController::class, 'store'])
+    ->name('contracts.store');
 
+    Route::get('/contracts/{contract}', [ContractController::class, 'show'])
+    ->name('contracts.show');
+
+    Route::get('/contracts/{contract}/edit', [ContractController::class, 'edit'])
+    ->name('contracts.edit');
+
+Route::put('/contracts/{contract}', [ContractController::class, 'update'])
+    ->name('contracts.update');
     Route::resource('contracts', ContractController::class);
-    Route::post(
-        '/contracts',
-        [ContractController::class,'store']
-    )->middleware('admin');
-
-    Route::get(
-        '/contracts/{id}/edit',
-        [ContractController::class,'edit']
-    )->middleware('admin');
-
-    Route::put(
-        '/contracts/{id}',
-        [ContractController::class,'update']
-    )->middleware('admin');
-
-    Route::delete(
-        '/contracts/{id}',
-        [ContractController::class,'destroy']
-    )->middleware('admin');
-
-    Route::get(
-        '/contracts/download/{id}',
-        [ContractController::class,'download']
-    )->middleware('download');
-
 });
+Route::get('/contracts/{contract}/download', [ContractController::class, 'download'])
+    ->name('contracts.download');
 
-Route::middleware('auth')->group(function(){
-
-    // Route::get(
-    //     '/contracts/export',
-    //     [ContractController::class, 'export']
-    // )->name('contracts.export');
-
-    Route::get(
-        '/contracts/download/{id}',
-        [ContractController::class, 'download']
-    )->name('contracts.download');
-
-    Route::resource(
-        'contracts',
-        ContractController::class
-    );
-
-});
 

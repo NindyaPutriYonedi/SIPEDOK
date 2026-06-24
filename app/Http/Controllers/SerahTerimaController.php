@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contract;
 use App\Models\SerahTerima;
 use App\Models\SerahTerimaAsbuilt;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class SerahTerimaController extends Controller
@@ -24,11 +25,11 @@ class SerahTerimaController extends Controller
 }
 
     public function create()
-    {
-        return view(
-            'serah-terima.create'
-        );
-    }
+{
+    $contracts = Contract::all();
+
+    return view('serah-terima.create', compact('contracts'));
+}
 
     public function store(Request $request)
 {
@@ -109,38 +110,17 @@ class SerahTerimaController extends Controller
     $data = SerahTerima::with('asbuilt')
         ->findOrFail($id);
 
-    $pdf = Pdf::loadView(
+    return view(
         'serah-terima.pdf',
         compact('data')
-    );
-
-    $pdf->setPaper(
-        'A4',
-        'portrait'
-    );
-
-    return $pdf->stream(
-        'berita-acara.pdf'
     );
 }
 
 public function downloadPdf($id)
 {
-    $data = SerahTerima::with('asbuilt')
-        ->findOrFail($id);
-
-    $pdf = Pdf::loadView(
+    return redirect()->route(
         'serah-terima.pdf',
-        compact('data')
-    );
-
-    $pdf->setPaper(
-        'A4',
-        'portrait'
-    );
-
-    return $pdf->download(
-        'berita-acara-'.$id.'.pdf'
+        $id
     );
 }
 

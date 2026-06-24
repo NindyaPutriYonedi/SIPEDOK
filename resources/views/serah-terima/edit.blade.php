@@ -73,130 +73,103 @@
 
         </div>
 
-        @foreach($data->asbuilt as $detail)
-
         <div class="card border-0 shadow-sm mb-4 detail-card">
 
-            <div class="card-header bg-white border-0 py-3">
+    <div class="card-header bg-white border-0 py-3">
 
-                <div class="d-flex justify-content-between align-items-center">
+        <h6 class="fw-semibold mb-0" id="step-title">
+            Asbuilt 1
+        </h6>
 
-                    <h6 class="fw-semibold mb-0">
+    </div>
 
-                        <i class="bi bi-file-earmark-text me-2"></i>
+    <div class="card-body">
 
-                        Asbuilt {{ $loop->iteration }}
+        <input type="hidden" id="detail_id">
 
-                    </h6>
+        <div class="row">
 
-                    <span class="badge bg-primary">
+            <div class="col-md-6 mb-3">
 
-                        Detail {{ $loop->iteration }}
-
-                    </span>
-
-                </div>
-
-            </div>
-
-            <div class="card-body">
+                <label class="form-label">
+                    Nomor Kontrak
+                </label>
 
                 <input
-                    type="hidden"
-                    name="detail_id[]"
-                    value="{{ $detail->id }}">
+                    type="text"
+                    id="no_kontrak"
+                    class="form-control modern-input">
 
-                <div class="row">
+            </div>
 
-                    <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-3">
 
-                        <label class="form-label">
-                            Nomor Kontrak
-                        </label>
+                <label class="form-label">
+                    Tanggal
+                </label>
 
-                        <input
-                            type="text"
-                            name="no_kontrak[]"
-                            value="{{ $detail->no_kontrak }}"
-                            class="form-control modern-input"
-                            required>
-
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-
-                        <label class="form-label">
-                            Tanggal
-                        </label>
-
-                        <input
-                            type="date"
-                            name="tanggal[]"
-                            value="{{ $detail->tanggal }}"
-                            class="form-control modern-input"
-                            required>
-
-                    </div>
-
-                </div>
-
-                <div class="row">
-
-                    <div class="col-md-12 mb-3">
-
-                        <label class="form-label">
-                            Rekanan
-                        </label>
-
-                        <input
-                            type="text"
-                            name="rekanan[]"
-                            value="{{ $detail->rekanan }}"
-                            class="form-control modern-input"
-                            required>
-
-                    </div>
-
-                </div>
-
-                <div class="mb-2">
-
-                    <label class="form-label">
-                        Keterangan
-                    </label>
-
-                    <textarea
-                        name="keterangan[]"
-                        rows="4"
-                        class="form-control modern-input">{{ $detail->keterangan }}</textarea>
-
-                </div>
+                <input
+                    type="date"
+                    id="tanggal"
+                    class="form-control modern-input">
 
             </div>
 
         </div>
 
-        @endforeach
+        <div class="mb-3">
 
-        <div class="d-flex justify-content-end gap-2">
+            <label class="form-label">
+                Rekanan
+            </label>
 
-            <a href="/serah-terima"
-               class="btn btn-light cancel-btn">
-
-                Kembali
-
-            </a>
-
-            <button type="submit"
-                    class="btn btn-primary save-btn">
-
-                <i class="bi bi-check-circle me-1"></i>
-
-                Simpan Perubahan
-
-            </button>
+            <input
+                type="text"
+                id="rekanan"
+                class="form-control modern-input">
 
         </div>
+
+        <div>
+
+            <label class="form-label">
+                Keterangan
+            </label>
+
+            <textarea
+                id="keterangan"
+                rows="4"
+                class="form-control modern-input"></textarea>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="d-flex justify-content-between mb-3">
+
+    <button
+        type="button"
+        id="btnBack"
+        class="btn btn-secondary">
+
+        Back
+
+    </button>
+
+    <button
+        type="button"
+        id="btnNext"
+        class="btn btn-primary">
+
+        Next
+
+    </button>
+
+</div>
+
+<div id="hidden-inputs"></div>
 
     </form>
 
@@ -263,5 +236,172 @@
 }
 
 </style>
+<script>
 
+document.addEventListener('DOMContentLoaded', function(){
+
+    let currentStep = 0;
+
+    const dataAsbuilt = @json(
+    $data->asbuilt
+);
+
+    const totalStep = dataAsbuilt.length;
+
+    const detailId =
+        document.getElementById('detail_id');
+
+    const noKontrak =
+        document.getElementById('no_kontrak');
+
+    const tanggal =
+        document.getElementById('tanggal');
+
+    const rekanan =
+        document.getElementById('rekanan');
+
+    const keterangan =
+        document.getElementById('keterangan');
+
+    const btnBack =
+        document.getElementById('btnBack');
+
+    const btnNext =
+        document.getElementById('btnNext');
+
+    const title =
+        document.getElementById('step-title');
+
+    const hiddenInputs =
+        document.getElementById('hidden-inputs');
+
+    function loadStep(){
+
+        const data = dataAsbuilt[currentStep];
+
+        title.innerHTML =
+            'Asbuilt ' + (currentStep + 1);
+
+        detailId.value =
+            data.id;
+
+        noKontrak.value =
+            data.no_kontrak;
+
+        tanggal.value =
+            data.tanggal;
+
+        rekanan.value =
+            data.rekanan;
+
+        keterangan.value =
+            data.keterangan;
+
+        btnBack.style.visibility =
+            currentStep === 0
+                ? 'hidden'
+                : 'visible';
+
+        btnNext.innerText =
+            currentStep === totalStep - 1
+                ? 'Simpan Perubahan'
+                : 'Next';
+    }
+
+    function saveCurrentStep(){
+
+        dataAsbuilt[currentStep] = {
+
+            id : detailId.value,
+
+            no_kontrak :
+                noKontrak.value,
+
+            tanggal :
+                tanggal.value,
+
+            rekanan :
+                rekanan.value,
+
+            keterangan :
+                keterangan.value
+        };
+    }
+
+    btnBack.addEventListener(
+        'click',
+        function(){
+
+            saveCurrentStep();
+
+            if(currentStep > 0){
+
+                currentStep--;
+
+                loadStep();
+
+            }
+
+        }
+    );
+
+    btnNext.addEventListener(
+        'click',
+        function(){
+
+            saveCurrentStep();
+
+            if(currentStep < totalStep - 1){
+
+                currentStep++;
+
+                loadStep();
+
+                return;
+            }
+
+            hiddenInputs.innerHTML = '';
+
+            dataAsbuilt.forEach(item => {
+
+                hiddenInputs.innerHTML += `
+
+                    <input
+                        type="hidden"
+                        name="detail_id[]"
+                        value="${item.id}">
+
+                    <input
+                        type="hidden"
+                        name="no_kontrak[]"
+                        value="${item.no_kontrak}">
+
+                    <input
+                        type="hidden"
+                        name="tanggal[]"
+                        value="${item.tanggal}">
+
+                    <input
+                        type="hidden"
+                        name="rekanan[]"
+                        value="${item.rekanan}">
+
+                    <input
+                        type="hidden"
+                        name="keterangan[]"
+                        value="${item.keterangan}">
+
+                `;
+            });
+
+            this.closest('form').submit();
+
+        }
+    );
+
+    loadStep();
+
+});
+
+</script>
 @endsection

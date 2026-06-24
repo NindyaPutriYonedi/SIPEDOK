@@ -46,7 +46,9 @@
                             type="date"
                             name="tanggal_terima"
                             class="form-control modern-input"
-                            required>
+                            required
+                            oninvalid="this.setCustomValidity('Tanggal terima wajib diisi')"
+                            oninput="this.setCustomValidity('')">
 
                     </div>
 
@@ -60,7 +62,9 @@
                             type="text"
                             name="penerima"
                             class="form-control modern-input"
-                            required>
+                            required
+                            oninvalid="this.setCustomValidity('Penerima wajib diisi')"
+                            oninput="this.setCustomValidity('')">
 
                     </div>
 
@@ -76,7 +80,9 @@
                             id="jumlah_asbuilt"
                             name="jumlah_asbuilt"
                             class="form-control modern-input"
-                            required>
+                            required
+                            oninvalid="this.setCustomValidity('Jumlah asbuilt wajib diisi')"
+                            oninput="this.setCustomValidity('')">
 
                     </div>
 
@@ -87,26 +93,111 @@
         </div>
 
         {{-- DETAIL DINAMIS --}}
-        <div id="detail-container"></div>
+        <div id="detail-container" style="display:none;">
 
-        <div class="d-flex justify-content-end gap-2">
+            <div class="card border-0 shadow-sm mb-4 detail-card">
 
-            <a href="/serah-terima"
-               class="btn btn-light cancel-btn">
+                <div class="card-header bg-white py-3">
 
-                Kembali
+                    <h6 class="mb-0 fw-semibold" id="step-title">
+                        Asbuilt 1
+                    </h6>
 
-            </a>
+                </div>
 
-            <button
-                type="submit"
-                class="btn btn-primary save-btn">
+                <div class="card-body">
 
-                Simpan Data
+                    <div class="row">
 
-            </button>
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                Nomor Kontrak
+                            </label>
+
+                            <input
+                                type="text"
+                                id="no_kontrak"
+                                class="form-control modern-input"
+                                required
+                                oninvalid="this.setCustomValidity('Nomor kontrak wajib diisi')"
+                                oninput="this.setCustomValidity('')">
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label">
+                                Tanggal
+                            </label>
+
+                            <input
+                                type="date"
+                                id="tanggal"
+                                class="form-control modern-input"
+                                required
+                                oninvalid="this.setCustomValidity('Tanggal wajib diisi')"
+                                oninput="this.setCustomValidity('')">
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Rekanan
+                        </label>
+
+                        <input
+                            type="text"
+                            id="rekanan"
+                            class="form-control modern-input"
+                            required
+                            oninvalid="this.setCustomValidity('Rekanan wajib diisi')"
+                            oninput="this.setCustomValidity('')">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Keterangan
+                        </label>
+
+                        <textarea
+                            id="keterangan"
+                            rows="3"
+                            class="form-control modern-input"
+                            required
+                            oninvalid="this.setCustomValidity('Keterangan wajib diisi')"
+                            oninput="this.setCustomValidity('')"></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-between mb-3">
+
+                <button type="button"
+                        id="btnBack"
+                        class="btn btn-secondary">
+                    Back
+                </button>
+
+                <button type="button"
+                        id="btnNext"
+                        class="btn btn-primary">
+                    Next
+                </button>
+
+            </div>
 
         </div>
+
+        <div id="hidden-inputs"></div>
 
     </form>
 
@@ -151,105 +242,185 @@
 
 document.addEventListener('DOMContentLoaded', function(){
 
-    const jumlahInput =
-        document.getElementById('jumlah_asbuilt');
+    const tanggalTerima = document.querySelector('[name="tanggal_terima"]');
+const penerima = document.querySelector('[name="penerima"]');
+    const jumlahInput = document.getElementById('jumlah_asbuilt');
+    const container = document.getElementById('detail-container');
 
-    const container =
-        document.getElementById('detail-container');
+    const stepTitle = document.getElementById('step-title');
 
-    jumlahInput.addEventListener('input', function(){
+    const noKontrak = document.getElementById('no_kontrak');
+    const tanggal = document.getElementById('tanggal');
+    const rekanan = document.getElementById('rekanan');
+    const keterangan = document.getElementById('keterangan');
 
-        let jumlah =
-            parseInt(this.value) || 0;
+    const btnBack = document.getElementById('btnBack');
+    const btnNext = document.getElementById('btnNext');
 
-        container.innerHTML = '';
+    const hiddenInputs = document.getElementById('hidden-inputs');
 
-        for(let i=1; i<=jumlah; i++)
-        {
-            container.innerHTML += `
+    let currentStep = 0;
+    let totalStep = 0;
 
-            <div class="card border-0 shadow-sm mb-4 detail-card">
+    let asbuiltData = [];
 
-                <div class="card-header bg-white py-3">
+    jumlahInput.addEventListener('change', function(){
 
-                    <h6 class="mb-0 fw-semibold">
+        totalStep = parseInt(this.value) || 0;
 
-                        Asbuilt ${i}
+        if(totalStep < 1){
+            container.style.display = 'none';
+            return;
+        }
 
-                    </h6>
+        container.style.display = 'block';
 
-                </div>
+        asbuiltData = [];
 
-                <div class="card-body">
+        for(let i = 0; i < totalStep; i++){
 
-                    <div class="row">
+            asbuiltData.push({
+                no_kontrak: '',
+                tanggal: '',
+                rekanan: '',
+                keterangan: ''
+            });
 
-                        <div class="col-md-6 mb-3">
+        }
 
-                            <label class="form-label">
-                                Nomor Kontrak
-                            </label>
+        currentStep = 0;
 
-                            <input
-                                type="text"
-                                name="no_kontrak[]"
-                                class="form-control modern-input"
-                                required>
+        loadStep();
 
-                        </div>
+    });
 
-                        <div class="col-md-6 mb-3">
+    function saveCurrentStep(){
 
-                            <label class="form-label">
-                                Tanggal
-                            </label>
+        asbuiltData[currentStep] = {
+            no_kontrak : noKontrak.value,
+            tanggal : tanggal.value,
+            rekanan : rekanan.value,
+            keterangan : keterangan.value
+        };
 
-                            <input
-                                type="date"
-                                name="tanggal[]"
-                                class="form-control modern-input"
-                                required>
+    }
 
-                        </div>
+    function loadStep(){
 
-                    </div>
+        let data = asbuiltData[currentStep];
 
-                    <div class="mb-3">
+        stepTitle.innerText = `Asbuilt ${currentStep + 1}`;
 
-                        <label class="form-label">
-                            Rekanan
-                        </label>
+        noKontrak.value = data.no_kontrak;
+        tanggal.value = data.tanggal;
+        rekanan.value = data.rekanan;
+        keterangan.value = data.keterangan;
 
-                        <input
-                            type="text"
-                            name="rekanan[]"
-                            class="form-control modern-input"
-                            required>
+        btnBack.style.visibility =
+            currentStep === 0 ? 'hidden' : 'visible';
 
-                    </div>
+        if(currentStep === totalStep - 1){
+            btnNext.innerText = 'Simpan Data';
+        }else{
+            btnNext.innerText = 'Next';
+        }
 
-                    <div>
+    }
 
-                        <label class="form-label">
-                            Keterangan
-                        </label>
+    btnBack.addEventListener('click', function(){
 
-                        <textarea
-                            name="keterangan[]"
-                            rows="3"
-                            class="form-control modern-input"></textarea>
+        saveCurrentStep();
 
-                    </div>
+        if(currentStep > 0){
 
-                </div>
+            currentStep--;
 
-            </div>
+            loadStep();
 
-            `;
         }
 
     });
 
+    btnNext.addEventListener('click', function(){
+
+    // VALIDASI FORM MASTER
+
+    if(!tanggalTerima.checkValidity()){
+        tanggalTerima.reportValidity();
+        return;
+    }
+
+    if(!penerima.checkValidity()){
+        penerima.reportValidity();
+        return;
+    }
+
+    if(!jumlahInput.checkValidity()){
+        jumlahInput.reportValidity();
+        return;
+    }
+
+    // VALIDASI DETAIL
+
+    if(!noKontrak.checkValidity()){
+        noKontrak.reportValidity();
+        return;
+    }
+
+    if(!tanggal.checkValidity()){
+        tanggal.reportValidity();
+        return;
+    }
+
+    if(!rekanan.checkValidity()){
+        rekanan.reportValidity();
+        return;
+    }
+
+    if(!keterangan.checkValidity()){
+        keterangan.reportValidity();
+        return;
+    }
+
+    saveCurrentStep();
+
+    if(currentStep < totalStep - 1){
+
+        currentStep++;
+
+        loadStep();
+
+        return;
+
+    }
+
+    hiddenInputs.innerHTML = '';
+
+    asbuiltData.forEach(item => {
+
+        hiddenInputs.innerHTML += `
+            <input type="hidden"
+                   name="no_kontrak[]"
+                   value="${item.no_kontrak}">
+
+            <input type="hidden"
+                   name="tanggal[]"
+                   value="${item.tanggal}">
+
+            <input type="hidden"
+                   name="rekanan[]"
+                   value="${item.rekanan}">
+
+            <input type="hidden"
+                   name="keterangan[]"
+                   value="${item.keterangan}">
+        `;
+
+    });
+
+    this.closest('form').submit();
+
+});
 });
 
 </script>

@@ -3,8 +3,17 @@
 @section('content')
 
 <div class="container py-4">
+@if(session('success'))
+    <div id="successAlert"
+         class="alert alert-success alert-dismissible fade show shadow-sm border-0">
 
+        {{ session('success') }}
+
+        <button class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
     <div class="d-flex justify-content-between align-items-center mb-4">
+
 
         <div>
 
@@ -56,121 +65,152 @@
 
                 <tbody>
 
-                @forelse($data as $row)
+@forelse($data as $row)
 
-                <tr>
+<tr>
 
-                    <td>
+    <td>
+        <span class="number-badge">
+            {{ ($data->currentPage() - 1) * $data->perPage() + $loop->iteration }}
+        </span>
+    </td>
 
-                        <span class="number-badge">
-    {{ ($data->currentPage() - 1) * $data->perPage() + $loop->iteration }}
-</span>
+    <td>
+        {{ date('d-m-Y', strtotime($row->tanggal_terima)) }}
+    </td>
 
-                    </td>
+    <td>
+        <strong>{{ $row->penerima }}</strong>
+    </td>
 
-                    <td>
+    <td>
+        @foreach($row->asbuilt as $asbuilt)
+            <span class="role-badge d-inline-block mb-1">
+                {{ $asbuilt->no_kontrak }}
+            </span>
+            <br>
+        @endforeach
+    </td>
 
-                        {{ date('d-m-Y', strtotime($row->tanggal_terima)) }}
+    <td>
+        {{ $row->asbuilt->first()->rekanan ?? '-' }}
+    </td>
 
-                    </td>
+    <td>
+        <span class="access-full">
+            {{ $row->jumlah_asbuilt }}
+        </span>
+    </td>
 
-                    <td>
+    <td>
 
-                        <strong>
-                            {{ $row->penerima }}
-                        </strong>
+        <div class="d-flex gap-2">
 
-                    </td>
+            <a href="/serah-terima/{{ $row->id }}/edit"
+               class="action-btn edit-btn">
+                <i class="bi bi-pencil-square"></i>
+            </a>
 
-                    <td>
+            <a href="/serah-terima/{{ $row->id }}/pdf"
+               target="_blank"
+               class="action-btn print-btn">
+                <i class="bi bi-printer"></i>
+            </a>
 
-    @foreach($row->asbuilt as $asbuilt)
+            @if(auth()->user()->role=='admin')
 
-        <span class="role-badge d-inline-block mb-1">
-            {{ $asbuilt->no_kontrak }}
-        </span><br>
+            <button type="button"
+                    class="action-btn delete-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteModal{{ $row->id }}">
+                <i class="bi bi-trash"></i>
+            </button>
 
-    @endforeach
+            @endif
 
-</td>
+        </div>
 
-                    <td>
+    </td>
 
-                        {{ $row->asbuilt->first()->rekanan ?? '-' }}
+</tr>
 
-                    </td>
+@if(auth()->user()->role=='admin')
 
-                    <td>
+<div class="modal fade"
+     id="deleteModal{{ $row->id }}"
+     tabindex="-1"
+     aria-labelledby="deleteModalLabel{{ $row->id }}"
+     aria-hidden="true">
 
-                        <span class="access-full">
+    <div class="modal-dialog">
 
-                            {{ $row->jumlah_asbuilt }}
+        <div class="modal-content">
 
-                        </span>
+            <div class="modal-header">
 
-                    </td>
+                <h5 class="modal-title"
+                    id="deleteModalLabel{{ $row->id }}">
+                    Hapus Data
+                </h5>
 
-                    <td>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
 
-                        <div class="d-flex gap-2">
+            </div>
 
-                            <a href="/serah-terima/{{ $row->id }}/edit"
-                               class="action-btn edit-btn">
+            <div class="modal-body">
+    Yakin ingin menghapus data serah terima dengan nomor kontrak:
 
-                                <i class="bi bi-pencil-square"></i>
+    <strong>
+        {{ $row->asbuilt->pluck('no_kontrak')->implode(', ') }}
+    </strong> ?
+</div>
 
-                            </a>
+            <div class="modal-footer">
 
-                            <a href="/serah-terima/{{ $row->id }}/print"
-   target="_blank"
-   class="action-btn print-btn">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Batal
+                </button>
 
-                                <i class="bi bi-printer"></i>
+                <form action="/serah-terima/{{ $row->id }}"
+                      method="POST">
 
-                            </a>
+                    @csrf
+                    @method('DELETE')
 
-                            @if(auth()->user()->role=='admin')
+                    <button type="submit"
+                            class="btn btn-danger">
+                        Hapus
+                    </button>
 
-                            <form action="/serah-terima/{{ $row->id }}"
-                                  method="POST">
+                </form>
 
-                                @csrf
-                                @method('DELETE')
+            </div>
 
-                                <button type="submit"
-                                        onclick="return confirm('Hapus data?')"
-                                        class="action-btn delete-btn">
+        </div>
 
-                                    <i class="bi bi-trash"></i>
+    </div>
 
-                                </button>
+</div>
 
-                            </form>
+@endif
 
-                            @endif
+@empty
 
-                        </div>
+<tr>
+    <td colspan="7"
+        class="text-center py-5 text-muted">
+        Tidak ada data
+    </td>
+</tr>
 
-                    </td>
+@endforelse
 
-                </tr>
-
-                @empty
-
-                <tr>
-
-                    <td colspan="7"
-                        class="text-center py-5 text-muted">
-
-                        Tidak ada data
-
-                    </td>
-
-                </tr>
-
-                @endforelse
-
-                </tbody>
+</tbody>
 
             </table>
 
@@ -291,5 +331,13 @@
 }
 
 </style>
+<script>
+setTimeout(function() {
+    let alertBox = document.getElementById('successAlert');
 
+    if(alertBox){
+        alertBox.remove();
+    }
+}, 3000);
+</script>
 @endsection
