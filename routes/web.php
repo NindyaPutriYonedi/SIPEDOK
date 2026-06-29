@@ -182,10 +182,10 @@ Route::put('/contracts/{contract}', [ContractController::class, 'update'])
     ->name('contracts.update');
     Route::resource('contracts', ContractController::class);
 
+});
 Route::get('/contracts/{contract}/download', [ContractController::class, 'download'])
     ->name('contracts.download');
 
-});
 
 Route::middleware('auth')->group(function () {
 
