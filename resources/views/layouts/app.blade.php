@@ -162,59 +162,70 @@
 
         <div class="sidebar-menu">
 
-            <div class="sidebar-menu-title">
-                MENU UTAMA
-            </div>
+    <div class="sidebar-menu-title">
+        MENU UTAMA
+    </div>
 
-            <a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">
-                <i class="bi bi-house-door-fill me-2"></i>
-                Dashboard
-            </a>
+    {{-- ADMIN --}}
+    @if(auth()->check() &&
+        auth()->user()->role == 'admin' &&
+        auth()->user()->access_level == 'view_download')
 
-            <a href="/mc0" class="{{ request()->is('mc0*') ? 'active' : '' }}">
-                <i class="bi bi-folder-fill me-2"></i>
-                MC0
-            </a>
+        <a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">
+            <i class="bi bi-house-door-fill me-2"></i>
+            Dashboard
+        </a>
 
-            <a href="/contracts" class="{{ request()->is('contracts*') ? 'active' : '' }}">
-                <i class="bi bi-file-earmark-text-fill me-2"></i>
-                Data Kontrak
-            </a>
+        <a href="/mc0" class="{{ request()->is('mc0*') ? 'active' : '' }}">
+            <i class="bi bi-folder-fill me-2"></i>
+            MC0
+        </a>
 
-            <a href="/serah-terima" class="{{ request()->is('serah-terima*') ? 'active' : '' }}">
-                <i class="bi bi-clipboard-check-fill me-2"></i>
-                Serah Terima
-            </a>
+        <a href="/contracts" class="{{ request()->is('contracts*') ? 'active' : '' }}">
+            <i class="bi bi-file-earmark-text-fill me-2"></i>
+            Data Kontrak
+        </a>
 
-            <a href="/mc1" class="{{ request()->is('mc1*') ? 'active' : '' }}">
-                <i class="bi bi-journal-check me-2"></i>
-                MC1
-            </a>
-            <a href="/peminjaman" class="{{ request()->is('peminjaman*') ? 'active' : '' }}">
-                <i class="bi bi-box-seam-fill me-2"></i>
-                Peminjaman
-            </a>
-            <a href="/users" class="{{ request()->is('users*') ? 'active' : '' }}">
-                <i class="bi bi-people-fill me-2"></i>
-                User
-            </a>
+        <a href="/serah-terima" class="{{ request()->is('serah-terima*') ? 'active' : '' }}">
+            <i class="bi bi-clipboard-check-fill me-2"></i>
+            Serah Terima
+        </a>
 
-            <form action="/logout" method="POST" class="mx-3 mt-2">
-                @csrf
+        <a href="/mc1" class="{{ request()->is('mc1*') ? 'active' : '' }}">
+            <i class="bi bi-journal-check me-2"></i>
+            MC1
+        </a>
 
-                <button type="submit" class="sidebar-logout">
-                    <i class="bi bi-box-arrow-right me-2"></i>
-                    Logout
-                </button>
-            </form>
-        </div>
+        <a href="/peminjaman" class="{{ request()->is('peminjaman*') ? 'active' : '' }}">
+            <i class="bi bi-box-seam-fill me-2"></i>
+            Peminjaman
+        </a>
 
-        <div class="sidebar-footer">
-            © 2025 SIPEDOK
-            <br>
-            Perumda Air Minum Kota Padang
-        </div>
+        <a href="/users" class="{{ request()->is('users*') ? 'active' : '' }}">
+            <i class="bi bi-people-fill me-2"></i>
+            User
+        </a>
 
+    @else
+
+        {{-- USER HANYA MELIHAT DATA KONTRAK --}}
+        <a href="/contracts" class="{{ request()->is('contracts*') ? 'active' : '' }}">
+            <i class="bi bi-file-earmark-text-fill me-2"></i>
+            Data Kontrak
+        </a>
+
+    @endif
+
+    <form action="/logout" method="POST" class="mx-3 mt-2">
+        @csrf
+
+        <button type="submit" class="sidebar-logout">
+            <i class="bi bi-box-arrow-right me-2"></i>
+            Logout
+        </button>
+    </form>
+
+</div>
     </div>
 
     <div class="content">
@@ -225,7 +236,7 @@
 
                 <div>
                     <i class="bi bi-person-circle me-1"></i>
-                    Admin
+
                 </div>
 
             </div>

@@ -78,24 +78,34 @@
             </form>
 
             {{-- Export --}}
-            <a href="{{ route('contracts.export', [
-                    'tahun' => request('tahun')
-                ]) }}"
-                class="btn btn-success add-btn">
+            @if(auth()->user()->role == 'admin'
+&& auth()->user()->access_level == 'view_download')
 
-                <i class="bi bi-file-earmark-excel me-1"></i>
-                Export
+<a href="{{ route('contracts.export',[
+'tahun'=>request('tahun')
+]) }}"
+class="btn btn-success add-btn">
 
-            </a>
+Export
+
+</a>
+
+@endif
 
             {{-- Add --}}
-            <a href="{{ route('contracts.create') }}"
-                class="btn btn-primary add-btn">
 
-                <i class="bi bi-plus-circle me-1"></i>
-                Add
+            @if(auth()->user()->role == 'admin'
+&& auth()->user()->access_level == 'view_download')
 
-            </a>
+<a href="{{ route('contracts.create') }}"
+class="btn btn-primary add-btn">
+
+    <i class="bi bi-plus-circle me-1"></i>
+    Add
+
+</a>
+
+@endif
 
         </div>
 
@@ -187,73 +197,68 @@
 
                         <td class="text-center">
 
-                            <div class="d-flex flex-column align-items-center gap-2">
+                           <div class="d-flex flex-column align-items-center gap-2">
 
-                                {{-- Detail --}}
-                                <a href="{{ route('contracts.show',$contract->id) }}"
-                                    class="action-btn view-btn"
-                                    title="Detail">
+    {{-- Detail (Semua User) --}}
+    <a href="{{ route('contracts.show', $contract->id) }}"
+       class="action-btn view-btn"
+       title="Detail">
 
-                                    <i class="bi bi-eye"></i>
-
-                                </a>
-
-                                {{-- Edit --}}
-                                <a href="{{ route('contracts.edit',$contract->id) }}"
-                                    class="action-btn edit-btn"
-                                    title="Edit">
-
-                                    <i class="bi bi-pencil-square"></i>
-
-                                </a>
-
-                                {{-- Download --}}
-                                @if($contract->berkas)
-
-    <a href="{{ route('contracts.download', $contract->id) }}"
-       class="action-btn download-btn"
-       title="Download">
-
-        <i class="bi bi-download"></i>
+        <i class="bi bi-eye"></i>
 
     </a>
 
-@else
+    @if(auth()->user()->role == 'admin' && auth()->user()->access_level == 'view_download')
 
-    <button
-        type="button"
-        class="action-btn download-btn"
-        disabled
-        title="File tidak tersedia">
+        {{-- Edit --}}
+        <a href="{{ route('contracts.edit', $contract->id) }}"
+           class="action-btn edit-btn"
+           title="Edit">
 
-        <i class="bi bi-download"></i>
+            <i class="bi bi-pencil-square"></i>
 
-    </button>
+        </a>
 
-@endif
+        {{-- Download --}}
+        @if($contract->berkas)
 
-                                {{-- Delete --}}
-                                <form
-                                    action="{{ route('contracts.destroy',$contract->id) }}"
-                                    method="POST">
+            <a href="{{ route('contracts.download', $contract->id) }}"
+               class="action-btn download-btn"
+               title="Download">
 
-                                    @csrf
-                                    @method('DELETE')
+                <i class="bi bi-download"></i>
 
-                                    <button
-    type="button"
-    class="action-btn delete-btn"
-    data-bs-toggle="modal"
-    data-bs-target="#deleteModal{{ $contract->id }}"
-    title="Hapus">
+            </a>
 
-    <i class="bi bi-trash"></i>
+        @else
 
-</button>
+            <button
+                type="button"
+                class="action-btn download-btn"
+                disabled
+                title="File tidak tersedia">
 
-                                </form>
+                <i class="bi bi-download"></i>
 
-                            </div>
+            </button>
+
+        @endif
+
+        {{-- Delete --}}
+        <button
+            type="button"
+            class="action-btn delete-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteModal{{ $contract->id }}"
+            title="Hapus">
+
+            <i class="bi bi-trash"></i>
+
+        </button>
+
+    @endif
+
+</div>
 
                         </td>
 

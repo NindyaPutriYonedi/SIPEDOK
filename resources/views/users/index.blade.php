@@ -328,5 +328,13 @@
 }
 
 </style>
+<script>
+setTimeout(function() {
+    let alertBox = document.getElementById('successAlert');
 
+    if(alertBox){
+        alertBox.remove();
+    }
+}, 3000);
+</script>
 @endsection

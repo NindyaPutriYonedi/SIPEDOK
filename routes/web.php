@@ -61,7 +61,7 @@ Route::get('/dashboard', function () {
 //     return ShopDrawingController::all();
 // });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth','admin')->group(function () {
 
     Route::get('/mc0', [ShopDrawingController::class, 'index']);
     Route::get('/mc0/create', [ShopDrawingController::class, 'create']);
@@ -81,7 +81,7 @@ Route::middleware('auth')->group(function () {
 // Route::get('/mc0/{id}/edit', [ShopDrawingController::class, 'edit']);
 // Route::put('/mc0/{id}', [ShopDrawingController::class, 'update']);
 // Route::delete('/mc0/{id}', [ShopDrawingController::class, 'destroy']);
-
+Route::middleware(['auth','admin'])->group(function(){
 Route::get('/mc1', [Mc1Controller::class, 'index']);
 Route::get('/mc1/create', [Mc1Controller::class, 'create']);
 Route::post('/mc1/store', [Mc1Controller::class, 'store']);
@@ -123,68 +123,9 @@ Route::get(
     '/peminjaman/{id}/print',
     [PeminjamanController::class, 'print']
 );
+});
 
-// Route::middleware(['auth', 'admin'])
-// ->group(function () {
-
-// Route::get(
-// '/serah-terima',
-// [SerahTerimaController::class,'index']
-// );
-
-// Route::get(
-// '/serah-terima/create',
-// [SerahTerimaController::class,'create']
-// )->middleware('admin');
-
-// Route::post(
-// '/serah-terima',
-// [SerahTerimaController::class,'store']
-// )->middleware('admin');
-
-// Route::get(
-// '/serah-terima/{id}',
-// [SerahTerimaController::class,'show']
-// );
-
-// Route::delete(
-// '/serah-terima/{id}',
-// [SerahTerimaController::class,'destroy']
-// )->middleware('admin');
-
-// Route::get(
-// '/serah-terima/download/{id}',
-// [SerahTerimaController::class,'download']
-// )->middleware('download');
-
-// });
-
-// Route::get(
-//     '/serah-terima/{id}/print',
-//     [SerahTerimaController::class,'print']
-// )->middleware('admin');
-
-// Route::get(
-// '/serah-terima/{id}/edit',
-// [SerahTerimaController::class,'edit']
-// )->middleware('admin');
-
-// Route::put(
-// '/serah-terima/{id}',
-// [SerahTerimaController::class,'update']
-// )->middleware('admin');
-
-// Route::get(
-//     '/serah-terima/{id}/pdf',
-//     [SerahTerimaController::class,'pdf']
-// );
-
-// Route::get(
-//     '/serah-terima/{id}/download-pdf',
-//     [SerahTerimaController::class,'downloadPdf']
-// );
-
-
+Route::middleware(['auth','admin'])->group(function(){
 Route::resource(
     'serah-terima',
     SerahTerimaController::class
@@ -215,7 +156,9 @@ Route::get(
     [SerahTerimaController::class, 'pdf']
 )->name('serah-terima.pdf');
 
-Route::middleware(['auth'])->group(function () {
+});
+
+Route::middleware(['auth','admin'])->group(function () {
 
     Route::get('/contracts', [ContractController::class, 'index'])
         ->name('contracts.index');
@@ -238,8 +181,18 @@ Route::middleware(['auth'])->group(function () {
 Route::put('/contracts/{contract}', [ContractController::class, 'update'])
     ->name('contracts.update');
     Route::resource('contracts', ContractController::class);
-});
+
 Route::get('/contracts/{contract}/download', [ContractController::class, 'download'])
     ->name('contracts.download');
 
+});
 
+Route::middleware('auth')->group(function () {
+
+    Route::get('/contracts', [ContractController::class, 'index'])
+        ->name('contracts.index');
+
+    Route::get('/contracts/{contract}', [ContractController::class, 'show'])
+        ->name('contracts.show');
+
+});
